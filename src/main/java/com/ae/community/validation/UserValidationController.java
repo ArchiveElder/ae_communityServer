@@ -27,6 +27,6 @@ public class UserValidationController {
     }
 
     public void compareUserIdAndJwt(Long userIdx, String jwtUserId) {
-        if(!jwtUserId.equals(userIdx)) throw new chaebbiException(NOT_CORRECT_JWT_AND_PATH_VARIABLE);
+        if(!jwtUserId.equals(userIdx.toString())) throw new chaebbiException(NOT_CORRECT_JWT_AND_PATH_VARIABLE);
     }
 }

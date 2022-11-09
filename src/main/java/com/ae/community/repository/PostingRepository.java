@@ -2,7 +2,9 @@ package com.ae.community.repository;
 
 import com.ae.community.domain.Posting;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,4 +20,8 @@ public interface PostingRepository extends JpaRepository<Posting, Long>, CrudRep
     Long countByUserIdx(Long userIdx);
 
     List<Posting> findAllByUserIdx(Long userIdx);
+
+    @Query(value = "select p from Posting p where p.idx IN (select sc.postIdx from Scrap sc " +
+            "join CommunityUser u on sc.userIdx = u.userIdx where u.userIdx = :userIdx)")
+    List<Posting> findAllWithScrap(@Param("userIdx") Long userIdx);
 }
