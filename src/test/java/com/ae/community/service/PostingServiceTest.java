@@ -1,7 +1,12 @@
 package com.ae.community.service;
 
+
 import com.ae.community.domain.*;
 import com.ae.community.dto.response.PostDetailDto;
+
+import com.ae.community.dto.response.CheckMyPostsDto;
+import com.ae.community.dto.response.CheckMyScrapsDto;
+
 import com.ae.community.repository.PostingRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,10 @@ class PostingServiceTest {
 
     @Autowired
     PostingService postingService;
+
+    @Autowired
+    ScrapService scrapService;
+
 
     @Autowired
     PostingRepository postingRepository;
@@ -49,15 +58,42 @@ class PostingServiceTest {
         Posting save_post = postingService.save(create_post);
 
     }
-    @Test
-    void 게시글_한개_조회() {
-        // user Kim 과 Choi 생성
+     @Test
+    void 내가쓴_게시글_조회() {
+        // given
         CommunityUser user1 = new CommunityUser();
         user1.setNickname("dr.김");
         user1.setIdx(333L);
         user1.setUserIdx(13L);
         CommunityUser userK = userService.save(user1);
+        // when
+        Posting createPost = postingService.create(userK.getUserIdx(), "new post", "new post title by Kim", "일상");
+        Posting savedPost1 =postingService.save(createPost);    // 포스트 저장
 
+        Posting createPost2 = postingService.create(userK.getUserIdx(), "new post2", "2nd new post title by Kim", "일상");
+        Posting savedPost2 =postingService.save(createPost2);
+
+        CheckMyPostsDto checkMyPostsDto = postingService.checkMyPosts(userK.getUserIdx());
+
+        // then
+        assertEquals(2, checkMyPostsDto.getPostCount());
+        assertEquals(savedPost1.getTitle(), checkMyPostsDto.getPostsLists().get(0).getTitle());
+        assertEquals(savedPost1.getContent(), checkMyPostsDto.getPostsLists().get(0).getContent());
+
+        assertEquals(savedPost2.getTitle(), checkMyPostsDto.getPostsLists().get(1).getTitle());
+        assertEquals(savedPost2.getContent(), checkMyPostsDto.getPostsLists().get(1).getContent());
+    }
+        
+
+    @Test
+    void 게시글_한개_조회() {
+
+         // user Kim 과 Choi 생성
+        CommunityUser user1 = new CommunityUser();
+        user1.setNickname("dr.김");
+        user1.setIdx(333L);
+        user1.setUserIdx(13L);
+        CommunityUser userK = userService.save(user1);
         CommunityUser user2 = new CommunityUser();
         user2.setNickname("dr.최");
         user2.setIdx(444L);
@@ -90,7 +126,41 @@ class PostingServiceTest {
         assertEquals(1, postDetailDto.getThumbupCount());
         // 댓글의 수가 1개가 맞는가
         assertEquals(1, postDetailDto.getCommentCount());
+        }
+       
 
+
+
+
+        
+
+    @Test
+    void 내가_스크랩한_게시글_조회() {
+        // given
+        CommunityUser user1 = new CommunityUser();
+        user1.setNickname("dr.김");
+        user1.setIdx(333L);
+        user1.setUserIdx(13L);
+        CommunityUser userK = userService.save(user1);
+
+
+        // when
+        Posting createPost = postingService.create(userK.getUserIdx(), "new post", "new post title by Kim", "일상");
+        Posting savedPost1 =postingService.save(createPost);    // 포스트 저장
+
+        Posting createPost2 = postingService.create(userK.getUserIdx(), "new post2", "2nd new post title by Kim", "일상");
+        Posting savedPost2 =postingService.save(createPost2);
+
+        Scrap scrap = Scrap.createScrap(userK.getUserIdx(), savedPost1.getIdx());
+        scrapService.createScrap(scrap);
+
+        Scrap scrap2 = Scrap.createScrap(userK.getUserIdx(), savedPost2.getIdx());
+        scrapService.createScrap(scrap2);
+
+        CheckMyScrapsDto checkMyScrapsDto = postingService.checkMyScraps(userK.getUserIdx());
+
+        // then
+        assertEquals(2, checkMyScrapsDto.getPostCount());
 
     }
 }
