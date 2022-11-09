@@ -23,6 +23,10 @@ public class UserValidationController {
 
     public void validateUserByJwt(String jwtUserId) {
         if(jwtUserId.equals("INVALID JWT")) throw new chaebbiException(INVALID_JWT);
-        if(jwtUserId == null) throw new chaebbiException(EMPTY_JWT);
+        if(jwtUserId.equals("anonymousUser")) throw new chaebbiException(EMPTY_JWT);
+    }
+
+    public void compareUserIdAndJwt(Long userIdx, String jwtUserId) {
+        if(!jwtUserId.equals(userIdx)) throw new chaebbiException(NOT_CORRECT_JWT_AND_PATH_VARIABLE);
     }
 }
