@@ -36,6 +36,7 @@ public class ThumbupService {
 
     public Long isThumbedUp(Long userIdx) {
         return thumbupRepository.countByUserIdx(userIdx);
+    }
 
     public List<Thumbup> findAllByPostIdx(Long postIdx) {
         return thumbupRepository.findAllByPostIdx(postIdx);

@@ -37,6 +37,7 @@ public class CommentService {
 
     public List<Comment> getCommentList(Long postIdx) {
         return commentRepository.findByPostIdx(postIdx);
+    }
 
     public List<Comment> findAllByPostIdx(Long postIdx) {
         return commentRepository.findAllByPostIdx(postIdx);
