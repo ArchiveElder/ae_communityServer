@@ -17,4 +17,11 @@ public class Scrap {
     private Long idx;
     private Long postIdx;
     private Long userIdx;
+
+    public static Scrap createScrap(Long userIdx, Long postIdx) {
+        Scrap scrap = new Scrap();
+        scrap.setUserIdx(userIdx);
+        scrap.setPostIdx(postIdx);
+        return scrap;
+    }
 }
