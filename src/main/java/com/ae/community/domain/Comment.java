@@ -16,20 +16,20 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
-    private int idx;
+    private Long idx;
 
     @Column(name = "user_idx")
-    private int userIdx;
+    private Long userIdx;
 
     @Column(name = "post_idx")
-    private int postIdx;
+    private Long postIdx;
 
     private String content;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
 
-    public static Comment createComment(int userIdx, int postIdx, String content) {
+    public static Comment createComment(Long userIdx, Long postIdx, String content) {
         Comment comment = new Comment();
         comment.setUserIdx(userIdx);
         comment.setPostIdx(postIdx);

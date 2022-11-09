@@ -14,15 +14,15 @@ import javax.persistence.*;
 public class Thumbup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
     @Column(name = "post_idx")
-    private int postIdx;
+    private Long postIdx;
 
     @Column(name = "user_idx")
-    private int userIdx;
+    private Long userIdx;
 
-    public static Thumbup createThumbup(int userIdx, int postIdx) {
+    public static Thumbup createThumbup(Long userIdx, Long postIdx) {
         Thumbup thumbup = new Thumbup();
         thumbup.setUserIdx(userIdx);
         thumbup.setPostIdx(postIdx);
