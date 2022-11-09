@@ -4,6 +4,8 @@ import com.ae.community.aws.S3Uploader;
 import com.ae.community.domain.Images;
 import com.ae.community.domain.Posting;
 import com.ae.community.dto.request.PostingDto;
+import com.ae.community.dto.response.CheckMyPostsDto;
+import com.ae.community.dto.response.CheckMyScrapsDto;
 import com.ae.community.service.ImagesService;
 import com.ae.community.service.PostingService;
 import com.ae.community.validation.PostValidationController;
@@ -72,4 +74,37 @@ public class PostingApiController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * [Get] 31-6 내가 쓴 게시글 조회 API
+     * */
+    @ApiOperation(value = "[GET] 내가 쓴 게시글 조회  ", notes = "userIdx로 내가 쓴 게시글들을 조회 합니다.")
+    @GetMapping("/mypost/{userIdx}")
+    public ResponseEntity<CheckMyPostsDto> checkMyPosts(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId) {
+        log.info("Post 31-6 /mypost/{userIdx}");
+        userValidationController.validateUser(userIdx);
+        userValidationController.validateUserByJwt(jwtUserId);
+        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+
+        CheckMyPostsDto checkMyPostsDto = postingService.checkMyPosts(userIdx);
+
+
+        return ResponseEntity.ok().body(checkMyPostsDto);
+    }
+
+    /**
+     * [Get] 31-7 내가 스크랩한 게시글 조회 API
+     * */
+    @ApiOperation(value = "[GET] 내가 스크랩한 게시글 조회  ", notes = "userIdx로 내가 스크랩한 게시글들을 조회 합니다.")
+    @GetMapping("/myscrap/{userIdx}")
+    public ResponseEntity<CheckMyScrapsDto> checkMyScraps(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId) {
+        log.info("Post 31-6 /myscrap/{userIdx}");
+        userValidationController.validateUser(userIdx);
+        userValidationController.validateUserByJwt(jwtUserId);
+        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+
+        CheckMyScrapsDto checkMyScrapsDto = postingService.checkMyScraps(userIdx);
+
+
+        return ResponseEntity.ok().body(checkMyScrapsDto);
+    }
 }
