@@ -9,4 +9,6 @@ public class PostingDto {
     private String title;
     @ApiModelProperty(value = "게시글 내용")
     private String content;
+    @ApiModelProperty(value = "게시글 카테고리")
+    private String groupName;
 }

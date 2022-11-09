@@ -14,10 +14,15 @@ import static com.ae.community.exception.CodeAndMessage.*;
 @RequiredArgsConstructor
 public class UserValidationController {
     private final CommunityUserService communityUserService;
-    public CommunityUser validateuser(Long userIdx) {
+    public CommunityUser validateUser(Long userIdx) {
         Optional<CommunityUser> user = communityUserService.findByUserIdx(userIdx);
         if (user == Optional.<CommunityUser>empty()) throw new chaebbiException(EMPTY_USER);
         else return user.get();
 
+    }
+
+    public void validateUserByJwt(String jwtUserId) {
+        if(jwtUserId.equals("INVALID JWT")) throw new chaebbiException(INVALID_JWT);
+        if(jwtUserId == null) throw new chaebbiException(EMPTY_JWT);
     }
 }
