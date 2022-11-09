@@ -104,7 +104,7 @@ public class PostingApiController {
         return ResponseEntity.ok().body(postDetailDto);
     }
 
-
+    /**
      * [Get] 31-6 내가 쓴 게시글 조회 API
      * */
     @ApiOperation(value = "[GET] 내가 쓴 게시글 조회  ", notes = "userIdx로 내가 쓴 게시글들을 조회 합니다.")
