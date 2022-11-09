@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "Thumbup API", description = "좋아요 API")
@@ -30,9 +31,11 @@ public class ThumbupApiController {
      */
     @ApiOperation(value = "[POST] 41-1 좋아요 등록 ", notes = "userIdx와 postIdx를 넣어 좋아요를 등록합니다")
     @PostMapping("/{userIdx}")
-    public ResponseEntity<?> createThumbup(@PathVariable(value = "userIdx", required = false) Long userIdx, @RequestBody PostThumbupReqDto request) {
+    public ResponseEntity<?> createThumbup(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody PostThumbupReqDto request) {
         //validation 로직
         userValidationController.validateUser(userIdx);
+        userValidationController.validateUserByJwt(jwtUserId);
+        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         thumbupValidationController.validatePost(request.getPostIdx());
 
         Thumbup thumbup = Thumbup.createThumbup(userIdx, request.getPostIdx());
@@ -46,9 +49,11 @@ public class ThumbupApiController {
      */
     @ApiOperation(value = "[POST] 41-2 좋아요 삭제 ", notes = "userIdx와 postIdx를 넣어 좋아요를 삭제합니다")
     @DeleteMapping("/{userIdx}")
-    public ResponseEntity<?> deleteThumbup(@PathVariable(value = "userIdx", required = false) Long userIdx, @RequestBody DeleteThumbupReqDto request) {
+    public ResponseEntity<?> deleteThumbup(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody DeleteThumbupReqDto request) {
         //validation 로직
         userValidationController.validateUser(userIdx);
+        userValidationController.validateUserByJwt(jwtUserId);
+        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         thumbupValidationController.validatePost(request.getPostIdx());
         thumbupValidationController.validateDeleteThumbup(userIdx, request.getPostIdx());
 

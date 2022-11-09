@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -29,9 +30,11 @@ public class ScrapApiController {
      */
     @ApiOperation(value = "[POST] 42-1 스크랩 등록 ", notes = "userIdx와 postIdx를 넣어 스크랩을 등록합니다")
     @PostMapping("/{userIdx}")
-    public ResponseEntity<?> createScrap(@PathVariable(value = "userIdx", required = false) Long userIdx, @RequestBody PostScrapReqDto request) {
+    public ResponseEntity<?> createScrap(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody PostScrapReqDto request) {
         //validation 로직
         userValidationController.validateUser(userIdx);
+        userValidationController.validateUserByJwt(jwtUserId);
+        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         scrapValidationController.validatePost(request.getPostIdx());
 
         Scrap scrap = Scrap.createScrap(userIdx, request.getPostIdx());
@@ -45,9 +48,11 @@ public class ScrapApiController {
      */
     @ApiOperation(value = "[POST] 42-2 스크랩 삭제 ", notes = "userIdx와 postIdx를 넣어 스크랩을 삭제합니다")
     @DeleteMapping("/{userIdx}")
-    public ResponseEntity<?> deleteScrap(@PathVariable(value = "userIdx", required = false) Long userIdx, @RequestBody DeleteScrapReqDto request) {
+    public ResponseEntity<?> deleteScrap(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody DeleteScrapReqDto request) {
         //validation 로직
         userValidationController.validateUser(userIdx);
+        userValidationController.validateUserByJwt(jwtUserId);
+        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         scrapValidationController.validatePost(request.getPostIdx());
         scrapValidationController.validateDeleteScrap(userIdx, request.getPostIdx());
 
