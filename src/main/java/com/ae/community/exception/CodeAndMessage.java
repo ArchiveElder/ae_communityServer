@@ -28,6 +28,9 @@ public enum CodeAndMessage {
     // 좋아요 관련 1400 ~
     INVALID_THUMBUP("1400", "유효하지 않은 thumbup 입니다."),
 
+    // 스크랩 관련 1600 ~
+    INVALID_SCRAP("1600", "유효하지 않은 scrap 입니다."),
+
     // S3 Util
     FILE_CONVERT_ERROR("1200", "파일 변환에 실패했습니다."),
     FILE_EXTENSION_ERROR("1201", "파일 확장자 인식에 실패했습니다.");
