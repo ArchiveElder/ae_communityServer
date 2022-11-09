@@ -31,7 +31,7 @@ public class CommentApiController {
     @PostMapping("/{userIdx}")
     public ResponseEntity<?> createComment(@PathVariable(value = "userIdx", required = false) Long userIdx, @RequestBody PostCommentReqDto request) {
         //validation 로직
-        userValidationController.validateuser(userIdx);
+        userValidationController.validateUser(userIdx);
         commentValidationController.validateComment(request);
 
         Comment comment = Comment.createComment(userIdx, request.getPostIdx(), request.getContent());
@@ -47,7 +47,7 @@ public class CommentApiController {
     @DeleteMapping("/{userIdx}")
     public ResponseEntity<?> deleteComment(@PathVariable(value = "userIdx", required = false) Long userIdx, @RequestBody DeleteCommentReqDto request) {
         //validation 로직
-        userValidationController.validateuser(userIdx);
+        userValidationController.validateUser(userIdx);
         commentValidationController.validateDeleteComment(userIdx, request.getCommentIdx());
 
         commentService.deleteComment(request.getCommentIdx());
