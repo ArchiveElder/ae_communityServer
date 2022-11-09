@@ -23,12 +23,13 @@ public class PostingService {
     private final CommunityUserService userService;
     public Posting save(Posting post) {  return postingRepository.save(post); }
 
-    public Posting create(Long userIdx, String content, String title) {
+    public Posting create(Long userIdx, String content, String title, String groupName) {
         Posting post = new Posting();
         post.setUserIdx(userIdx);
         post.setContent(content);
         post.setTitle(title);
         post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        post.setGroupName(groupName);
 
         return post;
     }

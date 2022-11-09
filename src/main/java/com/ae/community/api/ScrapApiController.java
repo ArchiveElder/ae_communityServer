@@ -31,7 +31,7 @@ public class ScrapApiController {
     @PostMapping("/{userIdx}")
     public ResponseEntity<?> createScrap(@PathVariable(value = "userIdx", required = false) Long userIdx, @RequestBody PostScrapReqDto request) {
         //validation 로직
-        userValidationController.validateuser(userIdx);
+        userValidationController.validateUser(userIdx);
         scrapValidationController.validatePost(request.getPostIdx());
 
         Scrap scrap = Scrap.createScrap(userIdx, request.getPostIdx());
@@ -47,7 +47,7 @@ public class ScrapApiController {
     @DeleteMapping("/{userIdx}")
     public ResponseEntity<?> deleteScrap(@PathVariable(value = "userIdx", required = false) Long userIdx, @RequestBody DeleteScrapReqDto request) {
         //validation 로직
-        userValidationController.validateuser(userIdx);
+        userValidationController.validateUser(userIdx);
         scrapValidationController.validatePost(request.getPostIdx());
         scrapValidationController.validateDeleteScrap(userIdx, request.getPostIdx());
 

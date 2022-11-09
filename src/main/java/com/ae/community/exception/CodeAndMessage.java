@@ -10,6 +10,9 @@ public enum CodeAndMessage {
     // 유저 관련 1000 ~
     EMPTY_USER("1000", "해당 유저가 없습니다"),
     EMPTY_PATHVARIABLE_USERID("1001", "userIdx pathvariable이 없습니다"),
+    INVALID_JWT("1002","유효하지 않은 JWT입니다." ),
+    EMPTY_JWT("1003", "권한이 없는 유저의 접근입니다. token을 확인하세요"),
+    NOT_CORRECT_JWT_AND_PATH_VARIABLE("1004", "Path variable의 userID와 jwt id 가 다릅니다."),
 
     // 게시글 관련 1100 ~
     EMPTY_CONTENT("1100", "게시글 내용이 비어있습니다"),
