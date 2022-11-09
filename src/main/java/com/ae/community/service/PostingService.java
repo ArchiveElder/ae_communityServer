@@ -1,6 +1,9 @@
 package com.ae.community.service;
 
+
+
 import com.ae.community.domain.*;
+
 import com.ae.community.dto.response.*;
 import com.ae.community.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,9 @@ public class PostingService {
     private final CommunityUserService userService;
     private final ThumbupService thumbupService;
     private final CommentService commentService;
+
+    private final ScrapService scrapService;
+
     public Posting save(Posting post) {  return postingRepository.save(post); }
 
     public Posting create(Long userIdx, String content, String title, String groupName) {
@@ -109,4 +115,56 @@ public class PostingService {
     public List<Posting> getAllPosts() {
         return postingRepository.findAll();
     }
+
+    public PostDetailDto detailPost(Long userIdx, Long postIdx, Posting post, List<Images> imageList){
+
+        PostDetailDto postDetailDto = new PostDetailDto();
+        postDetailDto.setPostIdx(post.getIdx());
+        postDetailDto.setTitle(post.getTitle());
+        postDetailDto.setContent(post.getContent());
+
+        Long writerIdx = findById(postIdx).get().getUserIdx();
+        CommunityUser user = userService.findByUserIdx(writerIdx).get();
+
+        String nickname = user.getNickname();
+        postDetailDto.setNickname(nickname);
+        postDetailDto.setIcon((int) (Math.random() *10));
+        postDetailDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
+        postDetailDto.setImagesCount(imageList.size());
+        if(imageList.size() != 0) {
+            List<ImagesListDto> dtoList = imageList.stream()
+                    .map(m -> new ImagesListDto(m.getImgUrl(), m.getImgRank()))
+                    .collect(Collectors.toList());
+            postDetailDto.setImagesLists(dtoList);
+
+        } else postDetailDto.setImagesLists(null);
+
+        Long thumbupCnt = thumbupService.getThumbupCount(postIdx);
+        postDetailDto.setThumbupCount(thumbupCnt);
+        Long commentCount = commentService.getCommentCnt(postIdx);
+
+        Long isLiked = thumbupService.isThumbedUp(userIdx);
+        Long isScraped = scrapService.isScraped(userIdx);
+        postDetailDto.setIsLiked(isLiked.intValue());
+        postDetailDto.setIsScraped(isScraped.intValue());
+
+        postDetailDto.setCommentCount(commentCount);
+        List<CommentsListDto> commentsListDtos = new ArrayList<>();
+        if(commentCount >0) {
+            List<Comment> comments = commentService.getCommentList(postIdx);
+            for(Comment comment: comments) {
+                Optional<CommunityUser> writer = userService.findByUserIdx(comment.getUserIdx());
+                String writerNickname = writer.get().getNickname();
+                commentsListDtos.add(new CommentsListDto(comment.getIdx(), writerNickname, (int) (Math.random() * 10)
+                        , new SimpleDateFormat("yyyy.MM.dd HH:mm").format(comment.getCreatedAt())
+                        ,comment.getContent()));
+            }
+            postDetailDto.setCommentsLists(commentsListDtos);
+
+        } else postDetailDto.setCommentsLists(null);
+
+        return postDetailDto;
+
+    }
+
 }

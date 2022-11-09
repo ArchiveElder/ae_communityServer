@@ -28,4 +28,8 @@ public class ScrapService {
     public Optional<Scrap> findByUserIdxAndPostIdx(Long userIdx, Long postIdx) {
         return scrapRepository.findByUserIdxAndPostIdx(userIdx, postIdx);
     }
+
+    public Long isScraped(Long userIdx) {
+        return scrapRepository.countByUserIdx(userIdx);
+    }
 }

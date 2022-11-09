@@ -1,6 +1,7 @@
 package com.ae.community.repository;
 
 import com.ae.community.domain.Comment;
+import com.ae.community.dto.response.CommentsListDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +14,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Optional<Comment> findByUserIdxAndIdx(Long userIdx, Long idx);
 
+
+    Long countByPostIdx(Long postIdx);
+
+    List<Comment> findByPostIdx(Long postIdx);
+
     List<Comment> findAllByPostIdx(Long postIdx);
+
 }
