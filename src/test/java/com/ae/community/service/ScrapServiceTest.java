@@ -36,7 +36,7 @@ public class ScrapServiceTest {
         String content = "안녕하세요";
         String title = "제목";
         Long userIdx = userT.getIdx();
-        Posting create_post = postingService.create(userIdx, content, title);
+        Posting create_post = postingService.create(userIdx, content, title, "일상");
         Posting save_post = postingService.save(create_post);
 
         Scrap scrap = Scrap.createScrap(userT.getIdx(), save_post.getIdx());
@@ -61,7 +61,7 @@ public class ScrapServiceTest {
         String content = "안녕하세요";
         String title = "제목";
         Long userIdx = userT.getIdx();
-        Posting create_post = postingService.create(userIdx, content, title);
+        Posting create_post = postingService.create(userIdx, content, title, "일상");
         Posting save_post = postingService.save(create_post);
 
         Scrap scrap = Scrap.createScrap(userT.getIdx(), save_post.getIdx());
