@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +28,9 @@ public class ThumbupService {
 
     public Optional<Thumbup> findByUserIdxAndPostIdx(Long userIdx, Long postIdx) {
         return thumbupRepository.findByUserIdxAndPostIdx(userIdx, postIdx);
+    }
+
+    public List<Thumbup> findAllByPostIdx(Long postIdx) {
+        return thumbupRepository.findAllByPostIdx(postIdx);
     }
 }
