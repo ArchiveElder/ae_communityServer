@@ -28,4 +28,12 @@ public class ThumbupService {
     public Optional<Thumbup> findByUserIdxAndPostIdx(Long userIdx, Long postIdx) {
         return thumbupRepository.findByUserIdxAndPostIdx(userIdx, postIdx);
     }
+
+    public Long getThumbupCount(Long postIdx) {
+        return thumbupRepository.countByPostIdx(postIdx);
+    }
+
+    public Long isThumbedUp(Long userIdx) {
+        return thumbupRepository.countByUserIdx(userIdx);
+    }
 }
