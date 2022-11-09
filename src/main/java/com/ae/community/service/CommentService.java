@@ -1,6 +1,7 @@
 package com.ae.community.service;
 
 import com.ae.community.domain.Comment;
+import com.ae.community.dto.response.CommentsListDto;
 import com.ae.community.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,16 @@ public class CommentService {
         return commentRepository.findByUserIdxAndIdx(userIdx, idx);
     }
 
+
+    public Long getCommentCnt(Long postIdx) {
+        return commentRepository.countByPostIdx(postIdx);
+    }
+
+    public List<Comment> getCommentList(Long postIdx) {
+        return commentRepository.findByPostIdx(postIdx);
+
     public List<Comment> findAllByPostIdx(Long postIdx) {
         return commentRepository.findAllByPostIdx(postIdx);
+
     }
 }

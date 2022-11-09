@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     void deleteByUserIdxAndPostIdx(Long userIdx, Long postIdx);
     Optional<Scrap> findByUserIdxAndPostIdx(Long userIdx, Long postIdx);
+
+    Long countByUserIdx(Long userIdx);
 }
