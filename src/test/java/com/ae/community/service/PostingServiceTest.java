@@ -2,6 +2,7 @@ package com.ae.community.service;
 
 
 import com.ae.community.domain.*;
+import com.ae.community.dto.response.AllPostsListDto;
 import com.ae.community.dto.response.PostDetailDto;
 
 import com.ae.community.dto.response.CheckMyPostsDto;
@@ -127,7 +128,61 @@ class PostingServiceTest {
         // 댓글의 수가 1개가 맞는가
         assertEquals(1, postDetailDto.getCommentCount());
         }
-       
+    @Test
+    void 전체_게시글_조회() {
+        // user Kim, Choi 생성
+        CommunityUser user1 = new CommunityUser();
+        user1.setNickname("dr.김");
+        user1.setIdx(333L);
+        user1.setUserIdx(13L);
+        CommunityUser userK = userService.save(user1);
+        CommunityUser user2 = new CommunityUser();
+        user2.setNickname("dr.최");
+        user2.setIdx(444L);
+        user2.setUserIdx(14L);
+        CommunityUser userC = userService.save(user2);
+
+
+        // 게시글 3개 생성
+        Posting createPost1 = postingService.create(userK.getUserIdx(), "new post", "new post title by Kim", "일상");
+        Posting savedPost1 =postingService.save(createPost1);    // 포스트 저장
+        Posting createPost2 = postingService.create(userK.getUserIdx(), "new post2", "2nd new post title by Kim", "일상");
+        Posting savedPost2 =postingService.save(createPost2);
+        Posting createPost3 = postingService.create(userK.getUserIdx(), "new post3", "2nd new post title by Kim","레시피");
+        Posting savedPost3 =postingService.save(createPost3);
+
+        // 따봉과 댓글
+        Comment comment = new Comment();
+        comment.setUserIdx(userC.getUserIdx());
+        comment.setPostIdx(savedPost1.getIdx());
+        comment.setContent("안녕하세요! 김선생님 최입니다.");
+        comment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        commentService.createComment(comment);
+
+        Comment recomment = new Comment();
+        recomment.setUserIdx(userK.getUserIdx());
+        recomment.setPostIdx(savedPost1.getIdx());
+        recomment.setContent("안녕하세요! 최선생님 반가워요.");
+        recomment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        commentService.createComment(recomment);
+
+        thumbupService.createThumbup(Thumbup.createThumbup(userC.getIdx(), savedPost1.getIdx()));
+        thumbupService.createThumbup(Thumbup.createThumbup(userC.getIdx(), savedPost2.getIdx()));
+        thumbupService.createThumbup(Thumbup.createThumbup(userC.getIdx(), savedPost3.getIdx()));
+
+        //List<AllPostsListDto> allPostsListDto = postingService.allPostsList(userK);
+
+        // 게시글 따봉수,댓글수가 맞는가 -> db에 저장되어있는 것 때문에 사용 불가
+        /*assertEquals(2, allPostsListDto.get(0).getCommentCnt());
+        assertEquals(1, allPostsListDto.get(0).getLikeCnt());
+
+        assertEquals(0, allPostsListDto.get(1).getCommentCnt());
+        assertEquals(1, allPostsListDto.get(1).getLikeCnt());
+
+        assertEquals(0, allPostsListDto.get(2).getCommentCnt());
+        assertEquals(1, allPostsListDto.get(2).getLikeCnt());*/
+
+    }
 
 
 

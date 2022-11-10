@@ -13,4 +13,6 @@ public interface ImagesRepository extends JpaRepository<Images, Long> {
     void deleteByPostIdx(Long postIdx);
 
     List<Images> findByPostIdx(Long postIdx);
+
+    Long countByPostIdx(Long postIdx);
 }
