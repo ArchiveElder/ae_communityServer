@@ -69,7 +69,7 @@ public class PostingService {
                         Optional<CommunityUser> communityUser = userService.findByUserIdx(m.getUserIdx());
                         List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                         List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                        return new PostsListDto(m.getIdx(), m.getUserIdx(), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                        return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                     })
                     .collect(Collectors.toList());
             checkMyPosts.setPostsLists(postsLists);
@@ -92,10 +92,10 @@ public class PostingService {
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
                     if(communityUser.isPresent()) {
 
-                        return new PostsListDto(m.getIdx(), m.getUserIdx(), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                        return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                     }
 
-                    return new PostsListDto(m.getIdx(), m.getUserIdx(), "", m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), "", m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
         checkMyScraps.setPostCount(postsLists.stream().count());

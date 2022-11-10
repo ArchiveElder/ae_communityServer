@@ -11,8 +11,8 @@ public class PostsListDto {
     private Long postIdx;
     @ApiModelProperty(value = "게시글 작성자 idx")
     private Long userIdx;
-    //@ApiModelProperty(value = "게시글 작성자 icon")
-    //private int icon;
+    @ApiModelProperty(value = "게시글 작성자 icon")
+    private int icon;
     @ApiModelProperty(value = "게시글 작성자 닉네임")
     private String nickname;
     @ApiModelProperty(value = "게시글 제목")
