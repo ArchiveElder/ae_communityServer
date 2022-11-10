@@ -49,4 +49,7 @@ public class ImagesService {
         return imagesRepository.findByPostIdx(postIdx);
     }
 
+    public Long getImagesCnt(Long postIdx) {
+        return imagesRepository.countByPostIdx(postIdx);
+    }
 }

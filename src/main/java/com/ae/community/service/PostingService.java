@@ -7,6 +7,9 @@ import com.ae.community.domain.*;
 import com.ae.community.dto.response.*;
 import com.ae.community.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -112,8 +115,8 @@ public class PostingService {
         return postingRepository.count();
     }
 
-    public List<Posting> getAllPosts() {
-        return postingRepository.findAll();
+    public Page<Posting> getAllPosts(Pageable pageable) {
+        return postingRepository.findAll(pageable);
     }
 
     public PostDetailDto detailPost(Long userIdx, Long postIdx, Posting post, List<Images> imageList){
@@ -169,4 +172,44 @@ public class PostingService {
 
     }
 
+    public List<AllPostsListDto> allPostsList(CommunityUser user, Pageable pageable) {
+        List<AllPostsListDto> allPostsList = new ArrayList<>();
+        // 게시글이 0개면 이후 로직 없이 return
+        Long postsCount = getAllPostCount();
+        if (postsCount == 0) {
+            return allPostsList;
+        } else {
+
+            Page<Posting> postingList = getAllPosts(pageable);
+            for (Posting post : postingList) {
+                AllPostsListDto allPostsListDto = new AllPostsListDto();
+
+                allPostsListDto.setPostIdx(post.getIdx());
+                allPostsListDto.setGroupName(post.getGroupName());
+                allPostsListDto.setTitle(post.getTitle());
+
+                Long writerIdx = post.getUserIdx();
+                Optional<CommunityUser> writer = userService.findByUserIdx(writerIdx);
+                allPostsListDto.setUserIdx(writerIdx);
+                allPostsListDto.setIcon((int) (Math.random()*10));
+                allPostsListDto.setNickname(writer.get().getNickname());
+
+                allPostsListDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
+
+                Long likeCnt = thumbupService.getThumbupCount(post.getIdx());
+                Long commentCnt = commentService.getCommentCnt(post.getIdx());
+                if(commentCnt >0) allPostsListDto.setHasImg(1);
+                else allPostsListDto.setHasImg(0);
+
+                allPostsListDto.setLikeCnt(likeCnt);
+                allPostsListDto.setCommentCnt(commentCnt);
+
+                Long isScraped = scrapService.countByUserIdxAndPostIdx(user.getUserIdx(), post.getIdx());
+                if(isScraped >0) allPostsListDto.setIsScraped(1);
+                else allPostsListDto.setIsScraped(0);
+                allPostsList.add(allPostsListDto);
+            }
+        }
+        return allPostsList;
+    }
 }

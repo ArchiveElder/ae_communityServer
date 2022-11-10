@@ -32,4 +32,8 @@ public class ScrapService {
     public Long isScraped(Long userIdx) {
         return scrapRepository.countByUserIdx(userIdx);
     }
+
+    public Long countByUserIdxAndPostIdx(Long userIdx, Long postIdx) {
+        return scrapRepository.countByUserIdxAndPostIdx(userIdx, postIdx);
+    }
 }

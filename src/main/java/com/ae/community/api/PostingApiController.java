@@ -6,10 +6,7 @@ import com.ae.community.domain.Images;
 import com.ae.community.domain.Posting;
 import com.ae.community.dto.request.PostingDto;
 
-import com.ae.community.dto.response.PostDetailDto;
-
-import com.ae.community.dto.response.CheckMyPostsDto;
-import com.ae.community.dto.response.CheckMyScrapsDto;
+import com.ae.community.dto.response.*;
 
 import com.ae.community.service.ImagesService;
 import com.ae.community.service.PostingService;
@@ -20,6 +17,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +77,25 @@ public class PostingApiController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * [Get] 31-4 게시글 전체  목록 조회 API
+     * */
+    @ApiOperation(value = "[GET] 31-4 게시글 전체  목록 조회  ", notes = "전체 게시글 목록을 조회 합니다.")
+    @GetMapping("/allposts/{userIdx}")
+    public ResponseEntity<List<AllPostsListDto>> allPostsList(@PathVariable (value = "userIdx") Long userIdx,
+                                                              @AuthenticationPrincipal String jwtUserId,
+                                                              @PageableDefault(size=10) Pageable pageable){
+
+        log.info("Get 31-4 /allposts/{userIdx}");
+        CommunityUser user = userValidationController.validateUser(userIdx);
+        userValidationController.validateUserByJwt(jwtUserId);
+        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+
+        List<AllPostsListDto> allPostsList = postingService.allPostsList(user, pageable);
+        return ResponseEntity.ok().body(allPostsList);
+
     }
 
     /**
