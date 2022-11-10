@@ -129,6 +129,7 @@ public class PostingService {
         String nickname = user.getNickname();
         postDetailDto.setNickname(nickname);
         postDetailDto.setIcon((int) (Math.random() *10));
+        postDetailDto.setUserIdx(user.getUserIdx());
         postDetailDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
         postDetailDto.setImagesCount(imageList.size());
         if(imageList.size() != 0) {
@@ -155,7 +156,8 @@ public class PostingService {
             for(Comment comment: comments) {
                 Optional<CommunityUser> writer = userService.findByUserIdx(comment.getUserIdx());
                 String writerNickname = writer.get().getNickname();
-                commentsListDtos.add(new CommentsListDto(comment.getIdx(), writerNickname, (int) (Math.random() * 10)
+                Long writerUserIdx = writer.get().getUserIdx();
+                commentsListDtos.add(new CommentsListDto(comment.getIdx(), writerUserIdx, writerNickname, (int) (Math.random() * 10)
                         , new SimpleDateFormat("yyyy.MM.dd HH:mm").format(comment.getCreatedAt())
                         ,comment.getContent()));
             }

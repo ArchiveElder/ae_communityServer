@@ -9,6 +9,8 @@ import lombok.Data;
 public class CommentsListDto {
     @ApiModelProperty(value = "조회 요청한 게시글의 댓글 id")
     private Long commentIdx;
+    @ApiModelProperty(value = "조회 요청한 게시글의 댓글 작성자의 userId")
+    private Long userIdx;
     @ApiModelProperty(value = "조회 요청한 게시글의 댓글 작성자 닉네임")
     private String nickname;
     @ApiModelProperty(value = "조회 요청한 게시글의 댓글 작성자 아이콘")
