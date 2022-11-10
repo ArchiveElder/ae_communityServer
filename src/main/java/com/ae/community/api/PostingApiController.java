@@ -54,7 +54,7 @@ public class PostingApiController {
         userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
-        postValidationController.validationPost(postingDto.getContent(), postingDto.getTitle());
+        postValidationController.validationPost(postingDto.getContent(), postingDto.getTitle(), postingDto.getGroupName());
 
         Posting post = new Posting();
         post = postingService.create(userIdx, postingDto.getContent(), postingDto.getTitle(), postingDto.getGroupName());

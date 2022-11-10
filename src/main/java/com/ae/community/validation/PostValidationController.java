@@ -16,9 +16,10 @@ import static com.ae.community.exception.CodeAndMessage.*;
 public class PostValidationController {
     private final PostingService postingService;
 
-    public void validationPost(String content, String title){
+    public void validationPost(String content, String title, String groupName){
         if(content == null || content.equals("")) throw new chaebbiException(EMPTY_CONTENT);
         if(title == null || title.equals("")) throw new chaebbiException(EMPTY_TITLE);
+        if(groupName == null || groupName.equals("")) throw new chaebbiException(EMPTY_GROUPNAME);
     }
 
     public void validateDeletePost(Long postIdx) {
