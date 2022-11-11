@@ -115,7 +115,7 @@ public class PostingApiController {
      * */
     @ApiOperation(value = "[GET] 31-4 게시판에 해당하는 게시글 목록 조회   ", notes = " 게시판에 해당하는 게시글 목록을 조회 합니다.")
     @GetMapping("/board/{userIdx}/{boardName}")
-    public ResponseEntity<List<AllPostsListDto>> allPostsList(@PathVariable (value = "userIdx") Long userIdx,
+    public ResponseEntity<PostsLists> allPostsList(@PathVariable (value = "userIdx") Long userIdx,
                                                               @PathVariable (value = "boardName") String boardName,
                                                               @AuthenticationPrincipal String jwtUserId,
                                                               @PageableDefault(size=10) Pageable pageable){
@@ -126,7 +126,9 @@ public class PostingApiController {
         postValidationController.validateBoardName(boardName);
 
         List<AllPostsListDto> allPostsList = postingService.getAllPostsInBoard(user, pageable, boardName);
-        return ResponseEntity.ok().body(allPostsList);
+        PostsLists postsLists = new PostsLists();
+        postsLists.setPostsList(allPostsList);
+        return ResponseEntity.ok().body(postsLists);
 
     }
 
