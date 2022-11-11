@@ -9,7 +9,7 @@ public class AllPostsListDto {
     @ApiModelProperty(value = "게시글 id")
     private Long postIdx;
     @ApiModelProperty(value = "게시글 종류")
-    private String groupName;
+    private String boardName;
     @ApiModelProperty(value = "게시글 제목")
     private String title;
     @ApiModelProperty(value = "게시글 작성자 userId")

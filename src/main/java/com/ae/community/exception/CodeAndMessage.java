@@ -19,6 +19,7 @@ public enum CodeAndMessage {
     EMPTY_TITLE("1101", "게시글 제목이 비어있습니다"),
     INVALID_POST_ID("1102", "유효하지 않은 postIdx 입니다."),
     EMPTY_GROUPNAME("1003", "게시판 종류가 비어있습니다."),
+    EMPTY_PATHVARIABLE_GROUPNAME("1004", "게시판 종류 path variable이 비어있습니다"),
 
     // 이미지 관련 1200 ~
     NO_MATCHING_IMAGES("1200", "imagesIdx에 해당하는 것이 없습니다."),

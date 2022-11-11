@@ -33,13 +33,13 @@ public class PostingService {
 
     public Posting save(Posting post) {  return postingRepository.save(post); }
 
-    public Posting create(Long userIdx, String content, String title, String groupName) {
+    public Posting create(Long userIdx, String content, String title, String boardName) {
         Posting post = new Posting();
         post.setUserIdx(userIdx);
         post.setContent(content);
         post.setTitle(title);
         post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        post.setBoardName(groupName);
+        post.setBoardName(boardName);
 
         return post;
     }
@@ -55,7 +55,7 @@ public class PostingService {
         Long postIdx = post.getIdx();
         post.setContent(updatePostDto.getTitle());
         post.setTitle(updatePostDto.getTitle());
-        post.setBoardName(updatePostDto.getGroupName());
+        post.setBoardName(updatePostDto.getBoardName());
 
         postingRepository.save(post);
         return post;
@@ -115,8 +115,12 @@ public class PostingService {
     public Long getAllPostCount() {
         return postingRepository.count();
     }
+    private Long getGroupPostsCount(String boardName) {
+        return postingRepository.countByBoardName(boardName);
+    }
 
     public Page<Posting> getAllPosts(Pageable pageable) {
+        //return postingRepository.findAllPostingWithPagination(pageable);
         return postingRepository.findAll(pageable);
     }
 
@@ -172,6 +176,69 @@ public class PostingService {
         return postDetailDto;
 
     }
+    public List<AllPostsListDto> getAllPostsInBoard(CommunityUser user, Pageable pageable, String boardName) {
+        if(boardName.equals("all")) {
+            return allPostsList(user, pageable);
+        }
+        switch (boardName) {
+            case "daily":
+                boardName = "일상";
+                break;
+            case "recipe":
+                boardName = "레시피 ";
+                break;
+            case "question":
+                boardName = "질문";
+                break;
+            case "honeytip":
+                boardName = "꿀팁";
+                break;
+            case "notice":
+                boardName = "공지";
+                break;
+            default: boardName="일상"; break;
+        }
+        return boardPostsList(user,pageable, boardName);
+    }
+
+    private List<AllPostsListDto> boardPostsList(CommunityUser user, Pageable pageable, String boardName) {
+        List<AllPostsListDto> allPostsList = new ArrayList<>();
+        Long groupPostsCnt = getGroupPostsCount(boardName);
+        if(groupPostsCnt == 0) return allPostsList;
+        Page<Posting> groupPostsList = postingRepository.findByBoardName(boardName, pageable);
+        for(Posting post : groupPostsList){
+            AllPostsListDto allPostsListDto = new AllPostsListDto();
+
+            allPostsListDto.setPostIdx(post.getIdx());
+            allPostsListDto.setBoardName(post.getBoardName());
+            allPostsListDto.setTitle(post.getTitle());
+
+            Long writerIdx = post.getUserIdx();
+            Optional<CommunityUser> writer = userService.findByUserIdx(writerIdx);
+            allPostsListDto.setUserIdx(writerIdx);
+            allPostsListDto.setIcon((int) (Math.random()*10));
+            allPostsListDto.setNickname(writer.get().getNickname());
+
+            allPostsListDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
+
+            Long likeCnt = thumbupService.getThumbupCount(post.getIdx());
+            Long commentCnt = commentService.getCommentCnt(post.getIdx());
+            if(commentCnt >0) allPostsListDto.setHasImg(1);
+            else allPostsListDto.setHasImg(0);
+
+            allPostsListDto.setLikeCnt(likeCnt);
+            allPostsListDto.setCommentCnt(commentCnt);
+
+            Long isScraped = scrapService.countByUserIdxAndPostIdx(user.getUserIdx(), post.getIdx());
+            if(isScraped >0) allPostsListDto.setIsScraped(1);
+            else allPostsListDto.setIsScraped(0);
+            allPostsList.add(allPostsListDto);
+        }
+
+        return allPostsList;
+    }
+
+
 
     public List<AllPostsListDto> allPostsList(CommunityUser user, Pageable pageable) {
         List<AllPostsListDto> allPostsList = new ArrayList<>();
@@ -186,7 +253,7 @@ public class PostingService {
                 AllPostsListDto allPostsListDto = new AllPostsListDto();
 
                 allPostsListDto.setPostIdx(post.getIdx());
-                allPostsListDto.setGroupName(post.getBoardName());
+                allPostsListDto.setBoardName(post.getBoardName());
                 allPostsListDto.setTitle(post.getTitle());
 
                 Long writerIdx = post.getUserIdx();
@@ -213,4 +280,6 @@ public class PostingService {
         }
         return allPostsList;
     }
+
+
 }

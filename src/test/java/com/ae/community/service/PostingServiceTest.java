@@ -12,6 +12,9 @@ import com.ae.community.repository.PostingRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -217,5 +220,14 @@ class PostingServiceTest {
         // then
         assertEquals(2, checkMyScrapsDto.getPostCount());
 
+    }
+    @Test
+    public void testPageDefault() {
+        // 1페이지 10개
+        Pageable pageable = PageRequest.of(0, 5);
+
+        Page<Posting> result = postingRepository.findAllPostingWithPagination(pageable);
+
+        System.out.println(result);
     }
 }

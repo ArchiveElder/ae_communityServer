@@ -51,10 +51,10 @@ public class PostingApiController {
 
         log.info("POST 31-1 /posting/{userIdx}");
         userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
-        postValidationController.validationPost(postingDto.getContent(), postingDto.getTitle(), postingDto.getGroupName());
+        postValidationController.validationPost(postingDto.getContent(), postingDto.getTitle(), postingDto.getBoardName());
 
         Posting post = new Posting();
-        post = postingService.create(userIdx, postingDto.getContent(), postingDto.getTitle(), postingDto.getGroupName());
+        post = postingService.create(userIdx, postingDto.getContent(), postingDto.getTitle(), postingDto.getBoardName());
         postingService.save(post);
         Long postIdx = post.getIdx();
 
@@ -96,7 +96,7 @@ public class PostingApiController {
         log.info("Post 31-3 /posting/update/{userIdx}/{postIdx}");
 
         userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
-        postValidationController.validationPost(updatePostDto.getContent(), updatePostDto.getTitle(), updatePostDto.getGroupName());
+        postValidationController.validationPost(updatePostDto.getContent(), updatePostDto.getTitle(), updatePostDto.getBoardName());
 
         Posting targetPost = postValidationController.validationPostExist(postIdx);
         postingService.update(targetPost, updatePostDto);
@@ -111,18 +111,21 @@ public class PostingApiController {
 
 
     /**
-     * [Get] 31-4 게시글 전체  목록 조회 API
+     * [Get] 31-4 게시판에 해당하는 게시글 목록 조회 API
      * */
-    @ApiOperation(value = "[GET] 31-4 게시글 전체  목록 조회  ", notes = "전체 게시글 목록을 조회 합니다.")
-    @GetMapping("/allposts/{userIdx}")
+    @ApiOperation(value = "[GET] 31-4 게시판에 해당하는 게시글 목록 조회   ", notes = " 게시판에 해당하는 게시글 목록을 조회 합니다.")
+    @GetMapping("/board/{userIdx}/{boardName}")
     public ResponseEntity<List<AllPostsListDto>> allPostsList(@PathVariable (value = "userIdx") Long userIdx,
+                                                              @PathVariable (value = "boardName") String boardName,
                                                               @AuthenticationPrincipal String jwtUserId,
                                                               @PageableDefault(size=10) Pageable pageable){
 
         log.info("Get 31-4 /allposts/{userIdx}");
         CommunityUser user = userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
 
-        List<AllPostsListDto> allPostsList = postingService.allPostsList(user, pageable);
+        postValidationController.validateBoardName(boardName);
+
+        List<AllPostsListDto> allPostsList = postingService.getAllPostsInBoard(user, pageable, boardName);
         return ResponseEntity.ok().body(allPostsList);
 
     }
