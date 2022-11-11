@@ -33,13 +33,13 @@ public class PostingService {
 
     public Posting save(Posting post) {  return postingRepository.save(post); }
 
-    public Posting create(Long userIdx, String content, String title, String groupName) {
+    public Posting create(Long userIdx, String content, String title, String boardName) {
         Posting post = new Posting();
         post.setUserIdx(userIdx);
         post.setContent(content);
         post.setTitle(title);
         post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        post.setBoardName(groupName);
+        post.setBoardName(boardName);
 
         return post;
     }
@@ -55,7 +55,7 @@ public class PostingService {
         Long postIdx = post.getIdx();
         post.setContent(updatePostDto.getTitle());
         post.setTitle(updatePostDto.getTitle());
-        post.setBoardName(updatePostDto.getGroupName());
+        post.setBoardName(updatePostDto.getBoardName());
 
         postingRepository.save(post);
         return post;
@@ -117,7 +117,7 @@ public class PostingService {
     }
 
     public Page<Posting> getAllPosts(Pageable pageable) {
-        return postingRepository.findAll(pageable);
+        return postingRepository.findAllWithUser(pageable);
     }
 
     public PostDetailDto detailPost(Long userIdx, Long postIdx, Posting post, List<Images> imageList){
@@ -186,7 +186,7 @@ public class PostingService {
                 AllPostsListDto allPostsListDto = new AllPostsListDto();
 
                 allPostsListDto.setPostIdx(post.getIdx());
-                allPostsListDto.setGroupName(post.getBoardName());
+                allPostsListDto.setBoardName(post.getBoardName());
                 allPostsListDto.setTitle(post.getTitle());
 
                 Long writerIdx = post.getUserIdx();

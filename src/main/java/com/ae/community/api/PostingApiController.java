@@ -51,10 +51,10 @@ public class PostingApiController {
 
         log.info("POST 31-1 /posting/{userIdx}");
         userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
-        postValidationController.validationPost(postingDto.getContent(), postingDto.getTitle(), postingDto.getGroupName());
+        postValidationController.validationPost(postingDto.getContent(), postingDto.getTitle(), postingDto.getBoardName());
 
         Posting post = new Posting();
-        post = postingService.create(userIdx, postingDto.getContent(), postingDto.getTitle(), postingDto.getGroupName());
+        post = postingService.create(userIdx, postingDto.getContent(), postingDto.getTitle(), postingDto.getBoardName());
         postingService.save(post);
         Long postIdx = post.getIdx();
 
@@ -96,7 +96,7 @@ public class PostingApiController {
         log.info("Post 31-3 /posting/update/{userIdx}/{postIdx}");
 
         userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
-        postValidationController.validationPost(updatePostDto.getContent(), updatePostDto.getTitle(), updatePostDto.getGroupName());
+        postValidationController.validationPost(updatePostDto.getContent(), updatePostDto.getTitle(), updatePostDto.getBoardName());
 
         Posting targetPost = postValidationController.validationPostExist(postIdx);
         postingService.update(targetPost, updatePostDto);
