@@ -4,6 +4,7 @@ package com.ae.community.service;
 
 import com.ae.community.domain.*;
 
+import com.ae.community.dto.request.PostingDto;
 import com.ae.community.dto.response.*;
 import com.ae.community.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,11 +51,11 @@ public class PostingService {
         postingRepository.deleteByIdx(postIdx);
     }
 
-    public Posting update(Posting post, String content, String title) {
+    public Posting update(Posting post, PostingDto updatePostDto) {
         Long postIdx = post.getIdx();
-        post.setContent(content);
-        post.setTitle(title);
-        //post.setCreatedAt(new Timestamp(System.currentTimeMillis())); 수정일자를 보일지 작성일자를 보일지 고민
+        post.setContent(updatePostDto.getTitle());
+        post.setTitle(updatePostDto.getTitle());
+        post.setGroupName(updatePostDto.getGroupName());
 
         postingRepository.save(post);
         return post;

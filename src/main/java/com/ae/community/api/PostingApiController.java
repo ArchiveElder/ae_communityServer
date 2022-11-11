@@ -58,20 +58,8 @@ public class PostingApiController {
         postingService.save(post);
         Long postIdx = post.getIdx();
 
-        int img_rank = 1;
+        imagesService.uploadImages(postIdx, multipartFileList);
 
-        for(int i = 0; i < multipartFileList.size(); i++) {
-            MultipartFile multipartFile = multipartFileList.get(i);
-            String img_url = "empty";
-            if(multipartFile != null) {
-                if(!multipartFile.isEmpty()) {
-                    img_url = s3Uploader.upload(multipartFile, "static");
-                    Images images = imagesService.create(postIdx, img_url, img_rank);
-                    imagesService.save(images);
-                    img_rank++;
-                }
-            }
-        }
 
         return ResponseEntity.ok().build();
     }
@@ -94,6 +82,33 @@ public class PostingApiController {
 
         return ResponseEntity.ok().build();
     }
+    /**
+     * [Post] 31-3 게시글 수정 API
+     * */
+    @ApiOperation(value = "[POST] 31-3 게시글 수정 ", notes = "게시글 id로 게시글의 제목과 내용을 수정합니다.")
+    @PostMapping("/update/{userIdx}/{postIdx}")
+    public ResponseEntity<Void> updatePost(@PathVariable (value = "userIdx") Long userIdx,
+                                           @PathVariable (value = "postIdx") Long postIdx,
+                                           @AuthenticationPrincipal String jwtUserId,
+                                           @ApiParam(value = "이미지파일 리스트") @RequestPart(value= "multipartFileList", required = false) List<MultipartFile> multipartFileList,
+                                           @ApiParam(value = "게시글 제목과 내용 dto") @RequestPart(value="posting") PostingDto updatePostDto
+                                           ) throws IOException {
+        log.info("Post 31-3 /posting/update/{userIdx}/{postIdx}");
+
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
+        postValidationController.validationPost(updatePostDto.getContent(), updatePostDto.getTitle(), updatePostDto.getGroupName());
+
+        Posting targetPost = postValidationController.validationPostExist(postIdx);
+        postingService.update(targetPost, updatePostDto);
+
+        Long imgCntInPost = imagesService.getImagesCnt(postIdx);
+        if(imgCntInPost > 0) imagesService.deleteByPostIdx(postIdx);
+
+        if(multipartFileList.size()>0) imagesService.uploadImages(postIdx, multipartFileList);
+
+        return ResponseEntity.ok().build();
+    }
+
 
     /**
      * [Get] 31-4 게시글 전체  목록 조회 API
