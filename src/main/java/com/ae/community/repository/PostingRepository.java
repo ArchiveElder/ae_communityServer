@@ -1,6 +1,8 @@
 package com.ae.community.repository;
 
 import com.ae.community.domain.Posting;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -24,4 +26,11 @@ public interface PostingRepository extends JpaRepository<Posting, Long>, CrudRep
     @Query(value = "select p from Posting p where p.idx IN (select sc.postIdx from Scrap sc " +
             "join CommunityUser u on sc.userIdx = u.userIdx where u.userIdx = :userIdx)")
     List<Posting> findAllWithScrap(@Param("userIdx") Long userIdx);
+
+    @Query(value = "select p from Posting p ORDER BY p.idx")
+    Page<Posting> findAllPostingWithPagination(Pageable pageable);
+
+    Page<Posting> findByBoardName(String boardName, Pageable pageable);
+
+    Long countByBoardName(String boardName);
 }
