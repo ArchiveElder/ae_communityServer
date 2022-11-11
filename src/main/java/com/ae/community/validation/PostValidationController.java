@@ -33,4 +33,8 @@ public class PostValidationController {
         else return post.get();
 
     }
+
+    public void validateBoardName(String boardName) {
+        if(boardName == null || boardName.equals("")) throw new chaebbiException(EMPTY_PATHVARIABLE_GROUPNAME);
+    }
 }

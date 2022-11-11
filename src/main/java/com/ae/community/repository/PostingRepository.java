@@ -29,4 +29,8 @@ public interface PostingRepository extends JpaRepository<Posting, Long>, CrudRep
 
     @Query(value = "select p from Posting p ORDER BY p.idx")
     Page<Posting> findAllPostingWithPagination(Pageable pageable);
+
+    Page<Posting> findByBoardName(String boardName, Pageable pageable);
+
+    Long countByBoardName(String boardName);
 }
