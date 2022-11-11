@@ -50,10 +50,7 @@ public class PostingApiController {
                                            @ApiParam(value = "게시글 제목과 내용 dto") @RequestPart(value="posting") PostingDto postingDto ) throws IOException {
 
         log.info("POST 31-1 /posting/{userIdx}");
-
-        userValidationController.validateUser(userIdx);
-        userValidationController.validateUserByJwt(jwtUserId);
-        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
         postValidationController.validationPost(postingDto.getContent(), postingDto.getTitle(), postingDto.getGroupName());
 
         Posting post = new Posting();
@@ -90,9 +87,7 @@ public class PostingApiController {
     ){
         log.info("Delete 31-2 /posting/{userIdx}/{postIdx}");
 
-        userValidationController.validateUser(userIdx);
-        userValidationController.validateUserByJwt(jwtUserId);
-        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
         postValidationController.validateDeletePost(postIdx);
 
         postingService.deletePost(postIdx);
@@ -110,9 +105,7 @@ public class PostingApiController {
                                                               @PageableDefault(size=10) Pageable pageable){
 
         log.info("Get 31-4 /allposts/{userIdx}");
-        CommunityUser user = userValidationController.validateUser(userIdx);
-        userValidationController.validateUserByJwt(jwtUserId);
-        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+        CommunityUser user = userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
 
         List<AllPostsListDto> allPostsList = postingService.allPostsList(user, pageable);
         return ResponseEntity.ok().body(allPostsList);
@@ -131,9 +124,7 @@ public class PostingApiController {
     ) {
         log.info("Get 31-5 /post/{userIdx}/{postIdx}");
 
-        CommunityUser user = userValidationController.validateUser(userIdx);
-        userValidationController.validateUserByJwt(jwtUserId);
-        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
         Posting post = postValidationController.validationPostExist(postIdx);
         List<Images> imageList = imagesService.findByPostIdx(postIdx);
 
