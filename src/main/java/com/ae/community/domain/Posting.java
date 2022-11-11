@@ -22,7 +22,7 @@ public class Posting {
     private String content;
     private String title;
     private Timestamp createdAt;
-    private String groupName;
+    private String boardName;
 
 
 

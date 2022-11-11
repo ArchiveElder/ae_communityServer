@@ -39,7 +39,7 @@ public class PostingService {
         post.setContent(content);
         post.setTitle(title);
         post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        post.setGroupName(groupName);
+        post.setBoardName(groupName);
 
         return post;
     }
@@ -55,7 +55,7 @@ public class PostingService {
         Long postIdx = post.getIdx();
         post.setContent(updatePostDto.getTitle());
         post.setTitle(updatePostDto.getTitle());
-        post.setGroupName(updatePostDto.getGroupName());
+        post.setBoardName(updatePostDto.getGroupName());
 
         postingRepository.save(post);
         return post;
@@ -186,7 +186,7 @@ public class PostingService {
                 AllPostsListDto allPostsListDto = new AllPostsListDto();
 
                 allPostsListDto.setPostIdx(post.getIdx());
-                allPostsListDto.setGroupName(post.getGroupName());
+                allPostsListDto.setGroupName(post.getBoardName());
                 allPostsListDto.setTitle(post.getTitle());
 
                 Long writerIdx = post.getUserIdx();
