@@ -117,7 +117,8 @@ public class PostingService {
     }
 
     public Page<Posting> getAllPosts(Pageable pageable) {
-        return postingRepository.findAllWithUser(pageable);
+        //return postingRepository.findAllPostingWithPagination(pageable);
+        return postingRepository.findAll(pageable);
     }
 
     public PostDetailDto detailPost(Long userIdx, Long postIdx, Posting post, List<Images> imageList){
