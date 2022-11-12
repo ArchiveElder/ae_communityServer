@@ -223,7 +223,8 @@ public class PostingService {
 
             Long likeCnt = thumbupService.getThumbupCount(post.getIdx());
             Long commentCnt = commentService.getCommentCnt(post.getIdx());
-            if(commentCnt >0) allPostsListDto.setHasImg(1);
+            Long imgCnt = imagesService.getImagesCnt(post.getIdx());
+            if(imgCnt >0) allPostsListDto.setHasImg(1);
             else allPostsListDto.setHasImg(0);
 
             allPostsListDto.setLikeCnt(likeCnt);
@@ -247,7 +248,6 @@ public class PostingService {
         if (postsCount == 0) {
             return allPostsList;
         } else {
-
             Page<Posting> postingList = getAllPosts(pageable);
             for (Posting post : postingList) {
                 AllPostsListDto allPostsListDto = new AllPostsListDto();
@@ -266,7 +266,8 @@ public class PostingService {
 
                 Long likeCnt = thumbupService.getThumbupCount(post.getIdx());
                 Long commentCnt = commentService.getCommentCnt(post.getIdx());
-                if(commentCnt >0) allPostsListDto.setHasImg(1);
+                Long imgCnt = imagesService.getImagesCnt(post.getIdx());
+                if(imgCnt >0) allPostsListDto.setHasImg(1);
                 else allPostsListDto.setHasImg(0);
 
                 allPostsListDto.setLikeCnt(likeCnt);
