@@ -61,18 +61,18 @@ public class PostingService {
 
     }
 
-    public CheckMyPostsDto checkMyPosts(Long userIdx) {
+    public CheckMyPostsDto checkMyPosts(Long userIdx, Pageable pageable) {
         CheckMyPostsDto checkMyPosts = new CheckMyPostsDto();
         Long postsCount = getPostsCount(userIdx);
         checkMyPosts.setPostCount(postsCount);
         if(postsCount > 0) {
-            List<Posting> postings = postingRepository.findAllByUserIdx(userIdx);
+            Page<Posting> postings = postingRepository.findAllByUserIdx(userIdx, pageable);
             List<PostsListDto> postsLists = postings.stream()
                     .map(m-> {
                         Optional<CommunityUser> communityUser = userService.findByUserIdx(m.getUserIdx());
                         List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                         List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                        return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                        return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() * 10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                     })
                     .collect(Collectors.toList());
             checkMyPosts.setPostsLists(postsLists);
@@ -80,14 +80,13 @@ public class PostingService {
         } else checkMyPosts.setPostsLists(null);
 
         return checkMyPosts;
-
-
     }
 
-    public CheckMyScrapsDto checkMyScraps(Long userIdx) {
+    public CheckMyScrapsDto checkMyScraps(Long userIdx, Pageable pageable) {
         CheckMyScrapsDto checkMyScraps = new CheckMyScrapsDto();
 
-        List<Posting> postings = postingRepository.findAllWithScrap(userIdx);
+        Page<Posting> postings = postingRepository.findAllWithScrap(userIdx, pageable);
+
         List<PostsListDto> postsLists = postings.stream()
                 .map(m-> {
                     Optional<CommunityUser> communityUser = userService.findByUserIdx(m.getUserIdx());
