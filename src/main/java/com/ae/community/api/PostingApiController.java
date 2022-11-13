@@ -166,13 +166,13 @@ public class PostingApiController {
      * */
     @ApiOperation(value = "[GET] 내가 쓴 게시글 조회  ", notes = "userIdx로 내가 쓴 게시글들을 조회 합니다.")
     @GetMapping("/mypost/{userIdx}")
-    public ResponseEntity<CheckMyPostsDto> checkMyPosts(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId) {
+    public ResponseEntity<CheckMyPostsDto> checkMyPosts(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId, @PageableDefault(size=10) Pageable pageable) {
         log.info("Post 31-6 /mypost/{userIdx}");
         userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
 
-        CheckMyPostsDto checkMyPostsDto = postingService.checkMyPosts(userIdx);
+        CheckMyPostsDto checkMyPostsDto = postingService.checkMyPosts(userIdx, pageable);
 
 
         return ResponseEntity.ok().body(checkMyPostsDto);
@@ -183,13 +183,13 @@ public class PostingApiController {
      * */
     @ApiOperation(value = "[GET] 내가 스크랩한 게시글 조회  ", notes = "userIdx로 내가 스크랩한 게시글들을 조회 합니다.")
     @GetMapping("/myscrap/{userIdx}")
-    public ResponseEntity<CheckMyScrapsDto> checkMyScraps(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId) {
+    public ResponseEntity<CheckMyScrapsDto> checkMyScraps(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId, @PageableDefault(size=10) Pageable pageable) {
         log.info("Post 31-6 /myscrap/{userIdx}");
         userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
 
-        CheckMyScrapsDto checkMyScrapsDto = postingService.checkMyScraps(userIdx);
+        CheckMyScrapsDto checkMyScrapsDto = postingService.checkMyScraps(userIdx, pageable);
 
 
         return ResponseEntity.ok().body(checkMyScrapsDto);

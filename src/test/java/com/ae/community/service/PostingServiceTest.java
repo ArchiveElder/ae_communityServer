@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,14 +71,16 @@ class PostingServiceTest {
         user1.setIdx(333L);
         user1.setUserIdx(13L);
         CommunityUser userK = userService.save(user1);
+
         // when
-        Posting createPost = postingService.create(userK.getUserIdx(), "new post", "new post title by Kim", "일상");
-        Posting savedPost1 =postingService.save(createPost);    // 포스트 저장
+         Posting createPost = postingService.create(userK.getUserIdx(), "new post", "new post title by Kim", "일상");
+         Posting savedPost1 =postingService.save(createPost);    // 포스트 저장
 
-        Posting createPost2 = postingService.create(userK.getUserIdx(), "new post2", "2nd new post title by Kim", "일상");
-        Posting savedPost2 =postingService.save(createPost2);
+         Posting createPost2 = postingService.create(userK.getUserIdx(), "new post2", "2nd new post title by Kim", "일상");
+         Posting savedPost2 =postingService.save(createPost2);
 
-        CheckMyPostsDto checkMyPostsDto = postingService.checkMyPosts(userK.getUserIdx());
+         Pageable pageable = PageRequest.of(0, 3);
+         CheckMyPostsDto checkMyPostsDto = postingService.checkMyPosts(userK.getUserIdx(), pageable);
 
         // then
         assertEquals(2, checkMyPostsDto.getPostCount());
@@ -209,16 +212,35 @@ class PostingServiceTest {
         Posting createPost2 = postingService.create(userK.getUserIdx(), "new post2", "2nd new post title by Kim", "일상");
         Posting savedPost2 =postingService.save(createPost2);
 
+        Posting createPost3 = postingService.create(userK.getUserIdx(), "new post", "new post title by Kim", "일상");
+        Posting savedPost3 =postingService.save(createPost3);    // 포스트 저장
+
+        Posting createPost4 = postingService.create(userK.getUserIdx(), "new post2", "2nd new post title by Kim", "일상");
+        Posting savedPost4 =postingService.save(createPost4);
+
+        Posting createPost5 = postingService.create(userK.getUserIdx(), "new post", "new post title by Kim", "일상");
+        Posting savedPost5 =postingService.save(createPost5);    // 포스트 저장
+
         Scrap scrap = Scrap.createScrap(userK.getUserIdx(), savedPost1.getIdx());
         scrapService.createScrap(scrap);
 
         Scrap scrap2 = Scrap.createScrap(userK.getUserIdx(), savedPost2.getIdx());
         scrapService.createScrap(scrap2);
 
-        CheckMyScrapsDto checkMyScrapsDto = postingService.checkMyScraps(userK.getUserIdx());
+        Scrap scrap3 = Scrap.createScrap(userK.getUserIdx(), savedPost3.getIdx());
+        scrapService.createScrap(scrap3);
+
+        Scrap scrap4 = Scrap.createScrap(userK.getUserIdx(), savedPost4.getIdx());
+        scrapService.createScrap(scrap4);
+
+        Scrap scrap5 = Scrap.createScrap(userK.getUserIdx(), savedPost5.getIdx());
+        scrapService.createScrap(scrap5);
+
+        Pageable pageable = PageRequest.of(0, 3);
+        CheckMyScrapsDto checkMyScrapsDto = postingService.checkMyScraps(userK.getUserIdx(), pageable);
 
         // then
-        assertEquals(2, checkMyScrapsDto.getPostCount());
+        assertEquals(3, checkMyScrapsDto.getPostCount());
 
     }
     @Test
