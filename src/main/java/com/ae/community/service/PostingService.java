@@ -4,7 +4,6 @@ package com.ae.community.service;
 
 import com.ae.community.domain.*;
 
-import com.ae.community.dto.request.PostingDto;
 import com.ae.community.dto.response.*;
 import com.ae.community.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,11 +50,11 @@ public class PostingService {
         postingRepository.deleteByIdx(postIdx);
     }
 
-    public Posting update(Posting post, PostingDto updatePostDto) {
+    public Posting update(Posting post, String updateTitle, String updateContent, String updateBoardName) {
         Long postIdx = post.getIdx();
-        post.setContent(updatePostDto.getTitle());
-        post.setTitle(updatePostDto.getTitle());
-        post.setBoardName(updatePostDto.getBoardName());
+        post.setContent(updateTitle);
+        post.setTitle(updateContent);
+        post.setBoardName(updateBoardName);
 
         postingRepository.save(post);
         return post;
