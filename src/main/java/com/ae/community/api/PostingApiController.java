@@ -4,7 +4,6 @@ import com.ae.community.aws.S3Uploader;
 import com.ae.community.domain.CommunityUser;
 import com.ae.community.domain.Images;
 import com.ae.community.domain.Posting;
-import com.ae.community.dto.request.PostingDto;
 
 import com.ae.community.dto.response.*;
 
@@ -19,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -43,18 +43,22 @@ public class PostingApiController {
      * [Post] 31-1 게시글 작성 API
      */
     @ApiOperation(value = "[POST] 31-1 게시글 작성 ", notes = "제목, 글내용, 이미지들을 넣어 게시글을 등록합니다")
-    @PostMapping("/{userIdx}")
+    @PostMapping(value = "/{userIdx}" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> uploadPost(@PathVariable(value = "userIdx") Long userIdx,
                                            @AuthenticationPrincipal String jwtUserId,
-                                           @ApiParam(value = "이미지파일 리스트") @RequestPart(value= "multipartFileList", required = false) List<MultipartFile> multipartFileList,
-                                           @ApiParam(value = "게시글 제목과 내용 dto") @RequestPart(value="posting") PostingDto postingDto ) throws IOException {
+                                           @ApiParam(value = "이미지파일 리스트") @RequestParam(value= "multipartFileList", required = false) List<MultipartFile> multipartFileList,
+                                           @ApiParam(value = "게시글 제목") @RequestParam(value="title", required =true) String title,
+                                           @ApiParam(value = "게시글 내용") @RequestParam(value="content", required = true) String content,
+                                           @ApiParam(value = "게시글 내용") @RequestParam(value="boardName") String boardName
+
+    ) throws IOException {
 
         log.info("POST 31-1 /posting/{userIdx}");
         userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
-        postValidationController.validationPost(postingDto.getContent(), postingDto.getTitle(), postingDto.getBoardName());
+        postValidationController.validationPost(content, title, boardName);
 
         Posting post = new Posting();
-        post = postingService.create(userIdx, postingDto.getContent(), postingDto.getTitle(), postingDto.getBoardName());
+        post = postingService.create(userIdx, content, title, boardName);
         postingService.save(post);
         Long postIdx = post.getIdx();
 
@@ -86,20 +90,22 @@ public class PostingApiController {
      * [Post] 31-3 게시글 수정 API
      * */
     @ApiOperation(value = "[POST] 31-3 게시글 수정 ", notes = "게시글 id로 게시글의 제목과 내용을 수정합니다.")
-    @PostMapping("/update/{userIdx}/{postIdx}")
+    @PostMapping(value = "/update/{userIdx}/{postIdx}",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updatePost(@PathVariable (value = "userIdx") Long userIdx,
                                            @PathVariable (value = "postIdx") Long postIdx,
                                            @AuthenticationPrincipal String jwtUserId,
-                                           @ApiParam(value = "이미지파일 리스트") @RequestPart(value= "multipartFileList", required = false) List<MultipartFile> multipartFileList,
-                                           @ApiParam(value = "게시글 제목과 내용 dto") @RequestPart(value="posting") PostingDto updatePostDto
+                                           @ApiParam(value = "이미지파일 리스트") @RequestParam(value= "multipartFileList", required = false) List<MultipartFile> multipartFileList,
+                                           @ApiParam(value = "게시글 제목") @RequestParam(value="title", required =true) String updateTitle,
+                                           @ApiParam(value = "게시글 내용") @RequestParam(value="content", required = true) String updateContent,
+                                           @ApiParam(value = "게시글 내용") @RequestParam(value="boardName") String updateBoardName
                                            ) throws IOException {
         log.info("Post 31-3 /posting/update/{userIdx}/{postIdx}");
 
         userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
-        postValidationController.validationPost(updatePostDto.getContent(), updatePostDto.getTitle(), updatePostDto.getBoardName());
+        postValidationController.validationPost(updateTitle, updateContent, updateBoardName);
 
         Posting targetPost = postValidationController.validationPostExist(postIdx);
-        postingService.update(targetPost, updatePostDto);
+        postingService.update(targetPost, updateTitle, updateContent, updateBoardName);
 
         Long imgCntInPost = imagesService.getImagesCnt(postIdx);
         if(imgCntInPost > 0) imagesService.deleteByPostIdx(postIdx);
