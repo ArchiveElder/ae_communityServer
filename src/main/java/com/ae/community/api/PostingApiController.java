@@ -62,7 +62,7 @@ public class PostingApiController {
         postingService.save(post);
         Long postIdx = post.getIdx();
 
-        if(multipartFileList.size()>0) {
+        if(multipartFileList != null) {
             imagesService.uploadImages(postIdx, multipartFileList);
         }
 
@@ -111,7 +111,7 @@ public class PostingApiController {
         Long imgCntInPost = imagesService.getImagesCnt(postIdx);
         if(imgCntInPost > 0) imagesService.deleteByPostIdx(postIdx);
 
-        if(multipartFileList.size()>0) imagesService.uploadImages(postIdx, multipartFileList);
+        if(multipartFileList != null) imagesService.uploadImages(postIdx, multipartFileList);
 
         return ResponseEntity.ok().build();
     }
