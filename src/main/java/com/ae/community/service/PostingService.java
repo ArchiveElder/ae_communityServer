@@ -63,21 +63,16 @@ public class PostingService {
 
     public CheckMyPostsDto checkMyPosts(Long userIdx, Pageable pageable) {
         CheckMyPostsDto checkMyPosts = new CheckMyPostsDto();
-        Long postsCount = getPostsCount(userIdx);
-        checkMyPosts.setPostCount(postsCount);
-        if(postsCount > 0) {
-            Page<Posting> postings = postingRepository.findAllByUserIdx(userIdx, pageable);
-            List<PostsListDto> postsLists = postings.stream()
-                    .map(m-> {
-                        Optional<CommunityUser> communityUser = userService.findByUserIdx(m.getUserIdx());
-                        List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
-                        List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                        return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() * 10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
-                    })
-                    .collect(Collectors.toList());
-            checkMyPosts.setPostsLists(postsLists);
-
-        } else checkMyPosts.setPostsLists(null);
+        Page<Posting> postings = postingRepository.findAllByUserIdx(userIdx, pageable);
+        List<PostsListDto> postsLists = postings.stream()
+                .map(m-> {
+                    Optional<CommunityUser> communityUser = userService.findByUserIdx(m.getUserIdx());
+                    List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
+                    List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() * 10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                })
+                .collect(Collectors.toList());
+        checkMyPosts.setPostsLists(postsLists);
 
         return checkMyPosts;
     }
@@ -100,7 +95,6 @@ public class PostingService {
                     return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), "", m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
-        checkMyScraps.setPostCount(postsLists.stream().count());
         checkMyScraps.setPostsLists(postsLists);
 
 
