@@ -62,8 +62,9 @@ public class PostingApiController {
         postingService.save(post);
         Long postIdx = post.getIdx();
 
-        imagesService.uploadImages(postIdx, multipartFileList);
-
+        if(multipartFileList.size()>0) {
+            imagesService.uploadImages(postIdx, multipartFileList);
+        }
 
         return ResponseEntity.ok().build();
     }
