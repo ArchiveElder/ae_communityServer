@@ -30,10 +30,10 @@ public class PostDetailDto {
     private Long thumbupCount;
     @ApiModelProperty(value = "조회 요청한 게시글 따봉 수")
     private Long commentCount;
-    @ApiModelProperty(value = "조회 요청한 게시글 좋아요 여부")
-    private int isLiked;
-    @ApiModelProperty(value = "조회 요청한 게시글 따봉 여부")
-    private int isScraped;
+    @ApiModelProperty(value = "조회 요청한 게시글 사용자가 좋아요한 여부")
+    private boolean isLiked;
+    @ApiModelProperty(value = "조회 요청한 게시글 사용자가 스크랩 여부")
+    private boolean isScraped;
 
     @ApiModelProperty(value = "조회 요청한 게시글 댓글 리스트")
     private List<CommentsListDto> commentsLists;
