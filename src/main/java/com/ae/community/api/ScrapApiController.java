@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 
 @Api(tags = "Scrap API", description = "스크랩 API")
 @RestController
@@ -37,6 +38,10 @@ public class ScrapApiController {
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         scrapValidationController.validatePost(request.getPostIdx());
 
+        Optional<Scrap> check = scrapService.findByUserIdxAndPostIdx(userIdx, request.getPostIdx());
+        if(check != Optional.<Scrap>empty()) {
+            scrapService.deleteScrap(userIdx, request.getPostIdx());
+        }
         Scrap scrap = Scrap.createScrap(userIdx, request.getPostIdx());
         Long scrapIdx = scrapService.createScrap(scrap);
         return ResponseEntity.ok().body(new PostScrapResDto(scrapIdx));

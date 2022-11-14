@@ -1,5 +1,6 @@
 package com.ae.community.api;
 
+import com.ae.community.domain.Scrap;
 import com.ae.community.domain.Thumbup;
 import com.ae.community.dto.request.DeleteThumbupReqDto;
 import com.ae.community.dto.request.PostThumbupReqDto;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Api(tags = "Thumbup API", description = "좋아요 API")
 @RestController
@@ -38,6 +41,10 @@ public class ThumbupApiController {
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         thumbupValidationController.validatePost(request.getPostIdx());
 
+        Optional<Thumbup> check = thumbupService.findByUserIdxAndPostIdx(userIdx, request.getPostIdx());
+        if(check != Optional.<Thumbup>empty()) {
+            thumbupService.deleteThumbup(userIdx, request.getPostIdx());
+        }
         Thumbup thumbup = Thumbup.createThumbup(userIdx, request.getPostIdx());
         Long thumbupIdx = thumbupService.createThumbup(thumbup);
         return ResponseEntity.ok().body(new PostThumbupResDto(thumbupIdx));
