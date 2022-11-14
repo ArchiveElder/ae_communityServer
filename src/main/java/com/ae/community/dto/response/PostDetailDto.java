@@ -8,6 +8,8 @@ import java.util.List;
 public class PostDetailDto {
     @ApiModelProperty(value = "조회 요청한 게시글 id")
     private Long postIdx;
+    @ApiModelProperty(value = "조회 요청한 게시글 게시판 종류")
+    private String boardName;
     @ApiModelProperty(value = "조회 요청한 게시글 제목")
     private String title;
     @ApiModelProperty(value = "조회 요청한 게시글 내용")

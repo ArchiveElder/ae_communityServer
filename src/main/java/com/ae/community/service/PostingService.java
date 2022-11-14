@@ -129,6 +129,7 @@ public class PostingService {
         postDetailDto.setPostIdx(post.getIdx());
         postDetailDto.setTitle(post.getTitle());
         postDetailDto.setContent(post.getContent());
+        postDetailDto.setBoardName(post.getBoardName());
 
         Long writerIdx = findById(postIdx).get().getUserIdx();
         CommunityUser user = userService.findByUserIdx(writerIdx).get();
