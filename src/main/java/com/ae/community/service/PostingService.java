@@ -145,10 +145,12 @@ public class PostingService {
         postDetailDto.setThumbupCount(thumbupCnt);
         Long commentCount = commentService.getCommentCnt(postIdx);
 
-        Long isLiked = thumbupService.isThumbedUp(userIdx);
-        Long isScraped = scrapService.isScraped(userIdx);
-        postDetailDto.setIsLiked(isLiked.intValue());
-        postDetailDto.setIsScraped(isScraped.intValue());
+        Long isLiked = thumbupService.isThumbedUp(userIdx, postIdx);
+        Long isScraped = scrapService.isScraped(userIdx, postIdx);
+        if(isLiked > 0) postDetailDto.setLiked(true);
+        if(isLiked == 0) postDetailDto.setLiked(false);
+        if(isScraped >0) postDetailDto.setScraped(true);
+        if(isScraped ==0) postDetailDto.setScraped(false);
 
         postDetailDto.setCommentCount(commentCount);
         List<CommentsListDto> commentsListDtos = new ArrayList<>();
