@@ -62,6 +62,7 @@ public class PostingService {
     }
 
     public CheckMyPostsDto checkMyPosts(Long userIdx, Pageable pageable) {
+
         CheckMyPostsDto checkMyPosts = new CheckMyPostsDto();
         Page<Posting> postings = postingRepository.findAllByUserIdx(userIdx, pageable);
         List<PostsListDto> postsLists = postings.stream()
@@ -69,7 +70,14 @@ public class PostingService {
                     Optional<CommunityUser> communityUser = userService.findByUserIdx(m.getUserIdx());
                     List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() * 10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                    List<Images> images = imagesService.findByPostIdx(m.getIdx());
+                    int hasImg = 0;
+                    if(images.size() == 0) {
+                        hasImg = 0;
+                    } else if(images.size() > 0) {
+                        hasImg = 1;
+                    }
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() * 10), communityUser.get().getNickname(), m.getBoardName(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), hasImg, thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
         checkMyPosts.setPostsLists(postsLists);
@@ -87,12 +95,19 @@ public class PostingService {
                     Optional<CommunityUser> communityUser = userService.findByUserIdx(m.getUserIdx());
                     List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
+                    List<Images> images = imagesService.findByPostIdx(m.getIdx());
+                    int hasImg = 0;
+                    if(images.size() == 0) {
+                        hasImg = 0;
+                    } else if(images.size() > 0) {
+                        hasImg = 1;
+                    }
                     if(communityUser.isPresent()) {
 
-                        return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                        return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), communityUser.get().getNickname(), m.getBoardName(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), hasImg, thumbups.size(), comments.size());
                     }
 
-                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), "", m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), "", m.getBoardName(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), hasImg, thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
         checkMyScraps.setPostsLists(postsLists);

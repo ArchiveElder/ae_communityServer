@@ -15,12 +15,16 @@ public class PostsListDto {
     private int icon;
     @ApiModelProperty(value = "게시글 작성자 닉네임")
     private String nickname;
+    @ApiModelProperty(value = "게시글 종류")
+    private String boardName;
     @ApiModelProperty(value = "게시글 제목")
     private String title;
     @ApiModelProperty(value = "게시글 내용")
     private String content;
     @ApiModelProperty(value = "게시글 게시날짜")
     private String createdAt;
+    @ApiModelProperty(value = "게시글 이미지 유무")
+    private int hasImg;
     @ApiModelProperty(value = "게시글 좋아요 개수")
     private int thumbupCount;
     @ApiModelProperty(value = "게시글 댓글 개수")
