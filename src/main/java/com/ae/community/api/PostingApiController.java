@@ -103,7 +103,7 @@ public class PostingApiController {
         log.info("Post 31-3 /posting/update/{userIdx}/{postIdx}");
 
         userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
-        postValidationController.validationPost(updateTitle, updateContent, updateBoardName);
+        postValidationController.validationPost(updateContent, updateTitle, updateBoardName);
 
         Posting targetPost = postValidationController.validationPostExist(postIdx);
         postingService.update(targetPost, updateTitle, updateContent, updateBoardName);
